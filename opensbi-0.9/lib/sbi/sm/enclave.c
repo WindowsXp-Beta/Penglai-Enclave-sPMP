@@ -319,7 +319,7 @@ int swap_from_host_to_enclave(uintptr_t* host_regs, struct enclave_t* enclave)
 
 	//set mstatus to transfer control to u mode
 	uintptr_t mstatus = host_regs[33]; //In OpenSBI, we use regs to change mstatus
-	mstatus = INSERT_FIELD(mstatus, MSTATUS_MPP, PRV_U);
+	mstatus = INSERT_FIELD(mstatus, MSTATUS_MPP, PRV_S);
 	mstatus = INSERT_FIELD(mstatus, MSTATUS_FS, 0x3); // enable float
 	host_regs[33] = mstatus;
 
@@ -826,7 +826,7 @@ uintptr_t enclave_derive_seal_key(uintptr_t* regs, uintptr_t salt_va, uintptr_t 
 		printm("[Penglai Monitor@%s] Seal key length or Salt length can't bigger then SM3 Hash size(32)\n", __func__);
 		return -1;
 	}
-	
+
 	if(check_in_enclave_world() < 0)
 	{
 		printm_err("[Penglai Monitor@%s] check enclave world is failed\n", __func__);

@@ -10,3 +10,4 @@ copy-files/*
 *.hex
 *.swp
 tags
+/.vscode

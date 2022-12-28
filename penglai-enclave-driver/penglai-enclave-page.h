@@ -27,10 +27,10 @@ typedef unsigned long pt_entry_t;
 #define RISCV_PT_LEVELBITS 9
 #define RISCV_PTE_PERMBITS 10
 #define RISCV_PT_SIZE (1 << RISCV_PT_SHIFT)
-#define ENCLAVE_USER_PAGE PTE_D | PTE_A | PTE_R | PTE_X | PTE_W | PTE_U
-#define ENCLAVE_STACK_PAGE PTE_D | PTE_A | PTE_R | PTE_W | PTE_U
-#define ENCLAVE_UNTRUSTED_PAGE PTE_D | PTE_A | PTE_R | PTE_W | PTE_U
-#define ENCLAVE_KBUFFER_PAGE PTE_D | PTE_A | PTE_R | PTE_W | PTE_U
+#define ENCLAVE_USER_PAGE PTE_D | PTE_A | PTE_R | PTE_X | PTE_W
+#define ENCLAVE_STACK_PAGE PTE_D | PTE_A | PTE_R | PTE_W
+#define ENCLAVE_UNTRUSTED_PAGE PTE_D | PTE_A | PTE_R | PTE_W
+#define ENCLAVE_KBUFFER_PAGE PTE_D | PTE_A | PTE_R | PTE_W
 
 /* Abstract for enclave memory (secure memory) */
 struct enclave_mem
@@ -53,7 +53,7 @@ struct untrusted_mem
 typedef struct untrusted_mem untrusted_mem_t;
 
 /* Free memory list in-enclave */
-struct free_mem_t 
+struct free_mem_t
 {
 	vaddr_t vaddr;
 	struct list_head  free_mem_list;
