@@ -35,6 +35,7 @@ extern uintptr_t _fw_start[], _fw_end[];
 #define SBI_EXIT_ENCLAVE        99
 #define SBI_ENCLAVE_OCALL        98
 #define SBI_GET_KEY             88
+#define SBI_SET_TIMER             89
 
 //Error code of SBI_ALLOC_ENCLAVE_MEM
 #define ENCLAVE_NO_MEMORY       -2

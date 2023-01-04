@@ -309,6 +309,9 @@ int swap_from_host_to_enclave(uintptr_t* host_regs, struct enclave_t* enclave)
 	swap_prev_mideleg(&(enclave->thread_context), csr_read(CSR_MIDELEG));
 	swap_prev_medeleg(&(enclave->thread_context), csr_read(CSR_MEDELEG));
 
+	// save supervisor trap handler and enable bits
+	swap_prev_stvec(&(enclave->thread_context), csr_read(CSR_STVEC));
+
 	// swap the mepc to transfer control to the enclave
 	// This will be overwriten by the entry-address in the case of run_enclave
 	//swap_prev_mepc(&(enclave->thread_context), csr_read(CSR_MEPC));
@@ -351,6 +354,9 @@ int swap_from_enclave_to_host(uintptr_t* regs, struct enclave_t* enclave)
 	//restore interrupts/exceptions delegation
 	swap_prev_mideleg(&(enclave->thread_context), csr_read(CSR_MIDELEG));
 	swap_prev_medeleg(&(enclave->thread_context), csr_read(CSR_MEDELEG));
+
+	// restore supervisor trap handler and enable bits
+	swap_prev_stvec(&(enclave->thread_context), csr_read(CSR_STVEC));
 
 	//transfer control back to kernel
 	//swap_prev_mepc(&(enclave->thread_context), read_csr(mepc));
@@ -504,7 +510,9 @@ uintptr_t run_enclave(uintptr_t* regs, unsigned int eid)
 	regs[32] = (uintptr_t)(enclave->entry_point); //In OpenSBI, we use regs to change mepc
 
 	//TODO: enable timer interrupt
-	csr_read_set(CSR_MIE, MIP_MTIP);
+	//csr_read_set(CSR_MIE, MIP_MTIP);
+	csr_read_set(CSR_MIE, MIP_STIP);
+	csr_read_set(CSR_MIDELEG, MIP_STIP);
 
 	//set default stack
 	regs[2] = ENCLAVE_DEFAULT_STACK;

@@ -8,6 +8,7 @@
 #include <sbi/sbi_ecall_interface.h>
 #include <sbi/sbi_error.h>
 #include <sbi/sbi_trap.h>
+#include <sbi/sbi_timer.h>
 #include <sbi/sbi_version.h>
 #include <sbi/riscv_asm.h>
 #include <sbi/sbi_console.h>
@@ -87,6 +88,14 @@ static int sbi_ecall_penglai_enclave_handler(unsigned long extid, unsigned long 
 			break;
 		case SBI_GET_KEY:
 			ret = sm_enclave_get_key((uintptr_t *)regs, regs->a0, regs->a1, regs->a2, regs->a3);
+			break;
+		case SBI_SET_TIMER:
+		#if __riscv_xlen == 32
+				sbi_timer_event_start((((u64)regs->a1 << 32) | (u64)regs->a0));
+		#else
+				sbi_timer_event_start((u64)regs->a0);
+		#endif
+			ret = 0;
 			break;
 		default:
 			sbi_printf("[Penglai@Monitor] enclave interface(funcid:%ld) not supported yet\n", funcid);
